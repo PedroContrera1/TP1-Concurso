@@ -7,26 +7,31 @@ import Exceptions.NombreInvalidoException;
 import Exceptions.ParticipanteDuplicadoException;
 import Exceptions.ParticipanteInvalidoException;
 import Exceptions.PeriodoInscripcionInvalidoException;
+import Persistencia.RegistroInscripcion;
 
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 public class Concurso {
-    private final LocalDate fechaInscripcion;
-    private final LocalDate fechaFin;
-    private final String nombre;
+    private final String id;
+    private final LocalDate fechaInicioInscripcion;
+    private final LocalDate fechaFinInscripcion;
     private final Set<Inscripcion> inscripciones;
+    private final RegistroInscripcion registroInscripcion;
 
-    public Concurso(String nombre, LocalDate fechaInscripcion, LocalDate fechaFin) {
-        validarNombre(nombre);
-        validarFecha(fechaInscripcion);
-        validarFecha(fechaFin);
-        validarFechasInscripcion(fechaInscripcion, fechaFin);
+    public Concurso(String id, LocalDate fechaInicioInscripcion, LocalDate fechaFinInscripcion,
+                    RegistroInscripcion registroInscripcion) {
+        validarNombre(id);
+        validarFecha(fechaInicioInscripcion);
+        validarFecha(fechaFinInscripcion);
+        validarRegistro(registroInscripcion);
+        validarPeriodo(fechaInicioInscripcion, fechaFinInscripcion);
 
-        this.nombre = nombre;
-        this.fechaInscripcion = fechaInscripcion;
-        this.fechaFin = fechaFin;
+        this.id = id;
+        this.fechaInicioInscripcion = fechaInicioInscripcion;
+        this.fechaFinInscripcion = fechaFinInscripcion;
+        this.registroInscripcion = registroInscripcion;
         this.inscripciones = new HashSet<>();
     }
 
@@ -39,16 +44,29 @@ public class Concurso {
         }
 
         inscripciones.add(inscripcion);
-
-        if (esInscriptoPrimerDia(inscripcion)) {
-            inscripcion.agregarPuntos(fechaInscripcion);
-        }
+        inscripcion.otorgarPuntosSiCorresponde(fechaInicioInscripcion);
+        registroInscripcion.guardar(inscripcion, id);
     }
 
     public boolean estaInscripto(Participante participante) {
         validarParticipante(participante);
         return inscripciones.stream()
                 .anyMatch(inscripcion -> inscripcion.getParticipante().equals(participante));
+    }
+
+    public boolean esInscriptoPrimerDia(Inscripcion inscripcion) {
+        validarInscripcion(inscripcion);
+        return fechaInicioInscripcion.equals(inscripcion.getFechaInscripcion());
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    private void validarRegistro(RegistroInscripcion registroInscripcion) {
+        if (registroInscripcion == null) {
+            throw new InscripcionInvalidaException("El registro de inscripciones no puede ser nulo.");
+        }
     }
 
     private void validarNombre(String nombre) {
@@ -63,7 +81,7 @@ public class Concurso {
         }
     }
 
-    private void validarFechasInscripcion(LocalDate fechaInicio, LocalDate fechaFin) {
+    private void validarPeriodo(LocalDate fechaInicio, LocalDate fechaFin) {
         if (!fechaInicio.isBefore(fechaFin)) {
             throw new PeriodoInscripcionInvalidoException(
                     "La fecha de inicio de inscripción debe ser anterior a la fecha de fin de inscripción."
@@ -72,8 +90,8 @@ public class Concurso {
     }
 
     private void validarPeriodoInscripcion(Inscripcion inscripcion) {
-        if (inscripcion.getFechaInscripcion().isBefore(this.fechaInscripcion) ||
-                inscripcion.getFechaInscripcion().isAfter(this.fechaFin)) {
+        LocalDate fecha = inscripcion.getFechaInscripcion();
+        if (fecha.isBefore(fechaInicioInscripcion) || fecha.isAfter(fechaFinInscripcion)) {
             throw new InscripcionFueraDeRangoException(
                     "La inscripción no se encuentra dentro del período permitido."
             );
@@ -90,10 +108,5 @@ public class Concurso {
         if (participante == null) {
             throw new ParticipanteInvalidoException("El participante no puede ser nulo.");
         }
-    }
-
-    public boolean esInscriptoPrimerDia(Inscripcion inscripcion) {
-        validarInscripcion(inscripcion);
-        return fechaInscripcion.equals(inscripcion.getFechaInscripcion());
     }
 }

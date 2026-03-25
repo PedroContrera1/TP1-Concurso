@@ -2,7 +2,6 @@ import Entities.Concurso;
 import Entities.Inscripcion;
 import Entities.Participante;
 import Exceptions.InscripcionFueraDeRangoException;
-import Persistencia.RegistroInscripcionFake;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

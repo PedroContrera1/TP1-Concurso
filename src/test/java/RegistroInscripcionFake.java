@@ -1,6 +1,5 @@
-package Persistencia;
-
 import Entities.Inscripcion;
+import Persistencia.RegistroInscripcion;
 
 public class RegistroInscripcionFake implements RegistroInscripcion {
     private boolean invocado=false;

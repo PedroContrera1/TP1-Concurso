@@ -10,6 +10,9 @@ import java.time.LocalDate;
 
 public class Main{
     public static void main(String[] args) {
+        Connection conexion = connectionBD.obtenerConexion();
+
+        RegistroInscripcion registro = new RegistroInscripcionBD(conexion);
 
         NotificadorInscripcion notificador = new NotificadorInscripcionMail(
                 "sandbox.smtp.mailtrap.io",

@@ -9,12 +9,13 @@ public class Participante {
     private final String id;
     private final String nombre;
     private int puntos;
-
-    public Participante(String id, String nombre) {
+    private final String email;
+    public Participante(String id, String nombre, String email) {
         validarId(id);
         validarNombre(nombre);
         this.id = id;
         this.nombre = nombre;
+        this.email=email;
         this.puntos = 0;
     }
 
@@ -32,6 +33,10 @@ public class Participante {
 
     public int getPuntos() {
         return puntos;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     private void validarNombre(String nombre) {

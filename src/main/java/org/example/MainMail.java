@@ -8,15 +8,18 @@ import Persistencia.*;
 import java.sql.Connection;
 import java.time.LocalDate;
 
-public class Main{
+public class MainMail {
     public static void main(String[] args) {
+        Connection conexion = ConexionBD.obtenerConexion();
+
+        RegistroInscripcion registro = new RegistroInscripcionBD(conexion);
 
         NotificadorInscripcion notificador = new NotificadorInscripcionMail(
                 "sandbox.smtp.mailtrap.io",
                 2525,
-                "",
-                "",
-                ""
+                "TU_USERNAME_MAILTRAP",
+                "TU_PASSWORD_MAILTRAP",
+                "no-reply@mitp.com"
         );
 
         Concurso concurso = new Concurso(
@@ -32,9 +35,8 @@ public class Main{
                 "Pedro",
                 "pedro@example.com"
         );
-        Inscripcion inscripcion = new Inscripcion(participante, LocalDate.of(2026, 3, 24));
-        concurso.inscribir(inscripcion);
 
-        System.out.println("Puntos del participante: " + participante.getPuntos());
-    }
+        concurso.inscribir(participante, LocalDate.of(2026, 3, 24));
+
+        System.out.println("Inscripción registrada y email enviado a Mailtrap.");
 }

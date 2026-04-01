@@ -7,6 +7,7 @@ import Exceptions.NombreInvalidoException;
 import Exceptions.ParticipanteDuplicadoException;
 import Exceptions.ParticipanteInvalidoException;
 import Exceptions.PeriodoInscripcionInvalidoException;
+import Persistencia.NotificadorInscripcion;
 import Persistencia.RegistroInscripcion;
 
 import java.time.LocalDate;
@@ -14,24 +15,26 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Concurso {
-    private final String id;
+    private final String idConcurso;
     private final LocalDate fechaInicioInscripcion;
     private final LocalDate fechaFinInscripcion;
     private final Set<Inscripcion> inscripciones;
     private final RegistroInscripcion registroInscripcion;
+    private final NotificadorInscripcion notificador;
 
-    public Concurso(String id, LocalDate fechaInicioInscripcion, LocalDate fechaFinInscripcion,
-                    RegistroInscripcion registroInscripcion) {
-        validarNombre(id);
+    public Concurso(String idConcurso, LocalDate fechaInicioInscripcion, LocalDate fechaFinInscripcion,
+                    RegistroInscripcion registroInscripcion, NotificadorInscripcion notificador) {
+        validarNombre(idConcurso);
         validarFecha(fechaInicioInscripcion);
         validarFecha(fechaFinInscripcion);
         validarRegistro(registroInscripcion);
         validarPeriodo(fechaInicioInscripcion, fechaFinInscripcion);
 
-        this.id = id;
+        this.idConcurso = idConcurso;
         this.fechaInicioInscripcion = fechaInicioInscripcion;
         this.fechaFinInscripcion = fechaFinInscripcion;
         this.registroInscripcion = registroInscripcion;
+        this.notificador=notificador;
         this.inscripciones = new HashSet<>();
     }
 
@@ -45,7 +48,8 @@ public class Concurso {
 
         inscripciones.add(inscripcion);
         inscripcion.otorgarPuntosSiCorresponde(fechaInicioInscripcion);
-        registroInscripcion.guardar(inscripcion, id);
+        registroInscripcion.guardar(inscripcion, idConcurso);
+        notificador.enviarConfirmacion(inscripcion.getParticipante(),getIdConcurso());
     }
 
     public boolean estaInscripto(Participante participante) {
@@ -59,8 +63,8 @@ public class Concurso {
         return fechaInicioInscripcion.equals(inscripcion.getFechaInscripcion());
     }
 
-    public String getId() {
-        return id;
+    public String getIdConcurso() {
+        return idConcurso;
     }
 
     private void validarRegistro(RegistroInscripcion registroInscripcion) {

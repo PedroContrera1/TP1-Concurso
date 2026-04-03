@@ -17,8 +17,8 @@ public class Main{
         NotificadorInscripcion notificador = new NotificadorInscripcionMail(
                 "sandbox.smtp.mailtrap.io",
                 2525,
-                "",
-                "",
+                "692498a3dff362",
+                "7f757d0825d4b2",
                 ""
         );
 

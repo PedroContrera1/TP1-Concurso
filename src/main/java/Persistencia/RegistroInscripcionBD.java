@@ -1,7 +1,6 @@
 package Persistencia;
 
 import Entities.Inscripcion;
-import Exceptions.ParticipanteDuplicadoException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -33,4 +32,9 @@ public class RegistroInscripcionBD implements RegistroInscripcion {
             throw new RuntimeException("No se pudo guardar la inscripción en la base de datos", e);
         }
     }
+
+    public boolean fueInvocado() {
+        return false;
+    }
+
 }

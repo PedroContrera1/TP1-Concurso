@@ -10,25 +10,28 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ConcursoTest {
     RegistroInscripcionFake registroFake= new RegistroInscripcionFake();
+    NotificadorInscripcionFake notificadorFake=new NotificadorInscripcionFake();
     @Test
     void unParticipanteSeInscribeEnUnConcurso() {
         LocalDate inicio = LocalDate.of(2026, 3, 23);
-        Concurso concurso = new Concurso("CON-1", inicio, inicio.plusDays(7), registroFake);
-        Participante participante = new Participante("45015481", "Pedro");
+        Concurso concurso = new Concurso("CON-1", inicio, inicio.plusDays(7), registroFake,notificadorFake);
+        Participante participante = new Participante("45015481", "Pedro", "pedro@mail.com");
         Inscripcion inscripcion = new Inscripcion(participante, inicio.plusDays(1));
 
         concurso.inscribir(inscripcion);
 
         assertTrue(concurso.estaInscripto(participante));
         assertEquals(0, participante.getPuntos());
+        assertEquals(1, notificadorFake.cantidadEnviados());
+        assertEquals("CON-1", notificadorFake.ultimoConcursoNotificado());
         assertTrue(registroFake.fueInvocado());
     }
 
     @Test
     void unParticipanteSeInscribeElPrimerDiaYGanaDiezPuntos() {
         LocalDate inicio = LocalDate.of(2026, 3, 23);
-        Concurso concurso = new Concurso("CON-2", inicio, inicio.plusDays(7), registroFake);
-        Participante participante = new Participante("42023456", "Diego");
+        Concurso concurso = new Concurso("CON-2", inicio, inicio.plusDays(7), registroFake,notificadorFake);
+        Participante participante = new Participante("42023456", "Diego","diego@gmail.com");
         Inscripcion inscripcion = new Inscripcion(participante, inicio);
 
         concurso.inscribir(inscripcion);
@@ -36,14 +39,16 @@ public class ConcursoTest {
         assertTrue(concurso.estaInscripto(participante));
         assertTrue(concurso.esInscriptoPrimerDia(inscripcion));
         assertEquals(10, participante.getPuntos());
+        assertEquals(1, notificadorFake.cantidadEnviados());
+        assertEquals("CON-2", notificadorFake.ultimoConcursoNotificado());
         assertTrue(registroFake.fueInvocado());
     }
 
     @Test
     void unParticipanteIntentaInscribirseFueraDelRangoDeInscripcion() {
         LocalDate inicio = LocalDate.of(2026, 3, 23);
-        Concurso concurso = new Concurso("CON-3", inicio, inicio.plusDays(7), registroFake);
-        Participante participante = new Participante("436789023", "Matias");
+        Concurso concurso = new Concurso("CON-3", inicio, inicio.plusDays(7), registroFake,notificadorFake);
+        Participante participante = new Participante("436789023", "Matias","matias@gmail.com");
         Inscripcion inscripcion = new Inscripcion(participante, inicio.minusDays(1));
 
         InscripcionFueraDeRangoException e = assertThrows(
@@ -53,6 +58,8 @@ public class ConcursoTest {
 
         assertEquals("La inscripción no se encuentra dentro del período permitido.", e.getMessage());
         assertFalse(concurso.estaInscripto(participante));
+        assertTrue(registroFake.seGuardoInscripcion());
+        assertTrue(notificadorFake.seEnvioMail());
         assertTrue(registroFake.fueInvocado());
     }
 

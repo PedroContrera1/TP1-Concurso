@@ -1,7 +1,6 @@
 package Persistencia;
 
 import Entities.Inscripcion;
-import Exceptions.ParticipanteDuplicadoException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

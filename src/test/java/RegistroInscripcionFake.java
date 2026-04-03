@@ -15,21 +15,8 @@ public class RegistroInscripcionFake implements RegistroInscripcion {
         concursosGuardados.add(idConcurso);
     }
 
-
     public boolean fueInvocado() {
         return true;
-    }
-
-    public int cantidadGuardados() {
-        return inscripcionesGuardadas.size();
-    }
-
-    public Inscripcion ultimaInscripcion() {
-        return inscripcionesGuardadas.get(inscripcionesGuardadas.size() - 1);
-    }
-
-    public String ultimoIdConcurso() {
-        return concursosGuardados.get(concursosGuardados.size() - 1);
     }
 
     public boolean seGuardoInscripcion() {

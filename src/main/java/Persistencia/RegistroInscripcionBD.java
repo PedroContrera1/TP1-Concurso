@@ -33,8 +33,5 @@ public class RegistroInscripcionBD implements RegistroInscripcion {
         }
     }
 
-    public boolean fueInvocado() {
-        return false;
-    }
 
 }

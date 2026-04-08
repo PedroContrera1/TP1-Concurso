@@ -13,8 +13,11 @@ public class ConcursoTest {
     NotificadorInscripcionFake notificadorFake=new NotificadorInscripcionFake();
     @Test
     void unParticipanteSeInscribeEnUnConcurso() {
+        RegistroInscripcionFake registroFake = new RegistroInscripcionFake();
+        NotificadorInscripcionFake notificadorFake = new NotificadorInscripcionFake();
+
         LocalDate inicio = LocalDate.of(2026, 3, 23);
-        Concurso concurso = new Concurso("CON-1", inicio, inicio.plusDays(7), registroFake,notificadorFake);
+        Concurso concurso = new Concurso("CON-1", inicio, inicio.plusDays(7), registroFake, notificadorFake);
         Participante participante = new Participante("45015481", "Pedro", "pedro@mail.com");
         Inscripcion inscripcion = new Inscripcion(participante, inicio.plusDays(1));
 
@@ -29,9 +32,12 @@ public class ConcursoTest {
 
     @Test
     void unParticipanteSeInscribeElPrimerDiaYGanaDiezPuntos() {
+        RegistroInscripcionFake registroFake = new RegistroInscripcionFake();
+        NotificadorInscripcionFake notificadorFake = new NotificadorInscripcionFake();
+
         LocalDate inicio = LocalDate.of(2026, 3, 23);
-        Concurso concurso = new Concurso("CON-2", inicio, inicio.plusDays(7), registroFake,notificadorFake);
-        Participante participante = new Participante("42023456", "Diego","diego@gmail.com");
+        Concurso concurso = new Concurso("CON-2", inicio, inicio.plusDays(7), registroFake, notificadorFake);
+        Participante participante = new Participante("42023456", "Diego", "diego@gmail.com");
         Inscripcion inscripcion = new Inscripcion(participante, inicio);
 
         concurso.inscribir(inscripcion);
@@ -47,8 +53,8 @@ public class ConcursoTest {
     @Test
     void unParticipanteIntentaInscribirseFueraDelRangoDeInscripcion() {
         LocalDate inicio = LocalDate.of(2026, 3, 23);
-        Concurso concurso = new Concurso("CON-3", inicio, inicio.plusDays(7), registroFake,notificadorFake);
-        Participante participante = new Participante("436789023", "Matias","matias@gmail.com");
+        Concurso concurso = new Concurso("CON-3", inicio, inicio.plusDays(7), registroFake, notificadorFake);
+        Participante participante = new Participante("436789023", "Matias", "matias@gmail.com");
         Inscripcion inscripcion = new Inscripcion(participante, inicio.minusDays(1));
 
         InscripcionFueraDeRangoException e = assertThrows(
@@ -58,9 +64,8 @@ public class ConcursoTest {
 
         assertEquals("La inscripción no se encuentra dentro del período permitido.", e.getMessage());
         assertFalse(concurso.estaInscripto(participante));
-        assertTrue(registroFake.seGuardoInscripcion());
-        assertTrue(notificadorFake.seEnvioMail());
-        assertTrue(registroFake.fueInvocado());
+        assertFalse(registroFake.seGuardoInscripcion());
+        assertFalse(notificadorFake.seEnvioMail());
     }
 
 }

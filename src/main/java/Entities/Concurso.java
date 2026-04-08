@@ -1,12 +1,6 @@
 package Entities;
 
-import Exceptions.FechaInvalidaException;
-import Exceptions.InscripcionFueraDeRangoException;
-import Exceptions.InscripcionInvalidaException;
-import Exceptions.NombreInvalidoException;
-import Exceptions.ParticipanteDuplicadoException;
-import Exceptions.ParticipanteInvalidoException;
-import Exceptions.PeriodoInscripcionInvalidoException;
+import Exceptions.*;
 import Persistencia.NotificadorInscripcion;
 import Persistencia.RegistroInscripcion;
 
@@ -22,6 +16,7 @@ public class Concurso {
     private final RegistroInscripcion registroInscripcion;
     private final NotificadorInscripcion notificador;
 
+
     public Concurso(String idConcurso, LocalDate fechaInicioInscripcion, LocalDate fechaFinInscripcion,
                     RegistroInscripcion registroInscripcion, NotificadorInscripcion notificador) {
         validarNombre(idConcurso);
@@ -29,7 +24,7 @@ public class Concurso {
         validarFecha(fechaFinInscripcion);
         validarRegistro(registroInscripcion);
         validarPeriodo(fechaInicioInscripcion, fechaFinInscripcion);
-
+        validarNotificador(notificador);
         this.idConcurso = idConcurso;
         this.fechaInicioInscripcion = fechaInicioInscripcion;
         this.fechaFinInscripcion = fechaFinInscripcion;
@@ -68,21 +63,27 @@ public class Concurso {
     }
 
     private void validarRegistro(RegistroInscripcion registroInscripcion) {
-        if (registroInscripcion == null) {
-            throw new InscripcionInvalidaException("El registro de inscripciones no puede ser nulo.");
-        }
+        Validador.validar(
+                registroInscripcion,
+                r -> r == null,
+                new InscripcionInvalidaException("El registro de inscripciones no puede ser nulo.")
+        );
     }
 
     private void validarNombre(String nombre) {
-        if (nombre == null || nombre.trim().isEmpty()) {
-            throw new NombreInvalidoException("El nombre del concurso no puede ser nulo o vacío.");
-        }
+        Validador.validar(
+                nombre,
+                n -> n == null || n.trim().isEmpty(),
+                new NombreInvalidoException("El nombre del concurso no puede ser nulo o vacío.")
+        );
     }
 
     private void validarFecha(LocalDate fecha) {
-        if (fecha == null) {
-            throw new FechaInvalidaException("La fecha no puede ser nula.");
-        }
+        Validador.validar(
+                fecha,
+                f -> f == null,
+                new FechaInvalidaException("La fecha no puede ser nula.")
+        );
     }
 
     private void validarPeriodo(LocalDate fechaInicio, LocalDate fechaFin) {
@@ -103,14 +104,27 @@ public class Concurso {
     }
 
     private void validarInscripcion(Inscripcion inscripcion) {
-        if (inscripcion == null) {
-            throw new InscripcionInvalidaException("La inscripción no puede ser nula.");
-        }
+        Validador.validar(
+                inscripcion,
+                i -> i == null,
+                new InscripcionInvalidaException("La inscripción no puede ser nula.")
+        );
     }
 
     private void validarParticipante(Participante participante) {
-        if (participante == null) {
-            throw new ParticipanteInvalidoException("El participante no puede ser nulo.");
-        }
+        Validador.validar(
+                participante,
+                p -> p == null,
+                new ParticipanteInvalidoException("El participante no puede ser nulo.")
+        );
     }
+
+    private void validarNotificador(NotificadorInscripcion notificador) {
+        Validador.validar(
+                notificador,
+                n -> n == null,
+                new InscripcionInvalidaException("El notificador no puede ser nulo.")
+        );
+    }
+
 }

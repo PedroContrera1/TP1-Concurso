@@ -16,7 +16,7 @@ public class RegistroInscripcionFake implements RegistroInscripcion {
     }
 
     public boolean fueInvocado() {
-        return true;
+        return !inscripcionesGuardadas.isEmpty();
     }
 
     public boolean seGuardoInscripcion() {

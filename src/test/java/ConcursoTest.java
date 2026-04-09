@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ConcursoTest {
-    RegistroInscripcionFake registroFake= new RegistroInscripcionFake();
+    RegistroInscripcionBDFake registroFake= new RegistroInscripcionBDFake();
     NotificadorInscripcionFake notificadorFake=new NotificadorInscripcionFake();
     @Test
     void unParticipanteSeInscribeEnUnConcurso() {
@@ -47,8 +47,8 @@ public class ConcursoTest {
     @Test
     void unParticipanteIntentaInscribirseFueraDelRangoDeInscripcion() {
         LocalDate inicio = LocalDate.of(2026, 3, 23);
-        Concurso concurso = new Concurso("CON-3", inicio, inicio.plusDays(7), registroFake,notificadorFake);
-        Participante participante = new Participante("436789023", "Matias","matias@gmail.com");
+        Concurso concurso = new Concurso("CON-3", inicio, inicio.plusDays(7), registroFake, notificadorFake);
+        Participante participante = new Participante("436789023", "Matias", "matias@gmail.com");
         Inscripcion inscripcion = new Inscripcion(participante, inicio.minusDays(1));
 
         InscripcionFueraDeRangoException e = assertThrows(
@@ -58,9 +58,8 @@ public class ConcursoTest {
 
         assertEquals("La inscripción no se encuentra dentro del período permitido.", e.getMessage());
         assertFalse(concurso.estaInscripto(participante));
-        assertTrue(registroFake.seGuardoInscripcion());
-        assertTrue(notificadorFake.seEnvioMail());
-        assertTrue(registroFake.fueInvocado());
+        assertFalse(notificadorFake.seEnvioMail());
+        assertFalse(registroFake.fueInvocado());
     }
 
 }

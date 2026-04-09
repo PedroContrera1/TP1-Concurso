@@ -1,12 +1,6 @@
 package Entities;
 
-import Exceptions.FechaInvalidaException;
-import Exceptions.InscripcionFueraDeRangoException;
-import Exceptions.InscripcionInvalidaException;
-import Exceptions.NombreInvalidoException;
-import Exceptions.ParticipanteDuplicadoException;
-import Exceptions.ParticipanteInvalidoException;
-import Exceptions.PeriodoInscripcionInvalidoException;
+import Exceptions.*;
 import Persistencia.NotificadorInscripcion;
 import Persistencia.RegistroInscripcion;
 

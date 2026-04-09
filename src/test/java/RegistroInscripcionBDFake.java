@@ -1,4 +1,3 @@
-
 import Entities.Inscripcion;
 import Persistencia.RegistroInscripcion;
 

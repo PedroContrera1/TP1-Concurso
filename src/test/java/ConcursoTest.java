@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ConcursoTest {
-    RegistroInscripcionFake registroFake= new RegistroInscripcionFake();
+    RegistroInscripcionBDFake registroFake= new RegistroInscripcionBDFake();
     @Test
     void unParticipanteSeInscribeEnUnConcurso() {
         LocalDate inicio = LocalDate.of(2026, 3, 23);
@@ -53,7 +53,7 @@ public class ConcursoTest {
 
         assertEquals("La inscripción no se encuentra dentro del período permitido.", e.getMessage());
         assertFalse(concurso.estaInscripto(participante));
-        assertTrue(registroFake.fueInvocado());
+        assertFalse(registroFake.fueInvocado());
     }
 
 }
